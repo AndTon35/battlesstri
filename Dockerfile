@@ -6,7 +6,6 @@ COPY requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt
 EXPOSE 8051
 
-COPY game .
+COPY game/* ./
 
-
-CMD [ "streamlit run", "./main.py" ]
+CMD [ "streamlit", "run", "./main.py" ]
