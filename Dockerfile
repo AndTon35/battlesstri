@@ -8,7 +8,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 EXPOSE 8501
 
-COPY game/* ./
+COPY Battlesstri/* ./
 
 RUN mkdir -p /root/.streamlit
 RUN bash -c 'echo -e "\
