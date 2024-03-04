@@ -1,53 +1,58 @@
 import streamlit as st
-import numpy as np
 
-GRID_SIZE = 10
-grille = [['.' for _ in range(GRID_SIZE)] for _ in range(GRID_SIZE)]
+from streamlit_server_state import server_state, server_state_lock
+
+with server_state_lock["rooms"]:
+    if "rooms" not in server_state:
+        server_state["rooms"] = []
+
+rooms = server_state["rooms"]
+
+room = st.sidebar.radio("Select room", rooms)
+
+with st.sidebar.form("New room"):
+
+    def on_create():
+        new_room_name = st.session_state.new_room_name
+        with server_state_lock["rooms"]:
+            server_state["rooms"] = server_state["rooms"] + [new_room_name]
+
+    st.text_input("Room name", key="new_room_name")
+    st.form_submit_button("Create a new room", on_click=on_create)
+
+if not room:
+    st.stop()
+
+room_key = f"room_{room}"
+with server_state_lock[room_key]:
+    if room_key not in server_state:
+        server_state[room_key] = []
+
+st.header(room)
+
+nickname = st.text_input("Nick name", key=f"nickname_{room}")
+if not nickname:
+    st.warning("Set your nick name.")
+    st.stop()
+
+message_input_key = f"message_input_{room}"
 
 
-def afficher_accueil():
-    st.title("Bienvenue dans notre jeu de Bataille Navale")
-    st.write("Pour commencer, veuillez placer vos bateaux sur le plateau de jeu.")
-    if st.button("Commencer"):
-        st.session_state["page"] = "placement"
-        
-def afficher_grille(grille):
-    for i in range(GRID_SIZE):
-        for j in range(GRID_SIZE):
-            # Utiliser st.selectbox pour chaque cellule de la grille
-            # Ici, on suppose que l'utilisateur peut choisir entre des valeurs comme '.' (point d'eau), 'S' (bateau)
-            grille[i][j] = st.selectbox(label=f"Cellule ({i},{j})", options=['.', 'S'], index=1 if grille[i][j] == 'S' else 0)
-        #st.write("") # Pour passer à la ligne
-        
-def afficher_placement():
-    st.title("Placement des bateaux")
-    st.write("Placez vos bateaux sur le plateau de jeu.")
-    
-    afficher_grille(grille)
-        
-    if st.button("Valider le placement des bateaux"):
-        st.session_state["page"] = "jouer"
+def on_message_input():
+    new_message_text = st.session_state[message_input_key]
+    if not new_message_text:
+        return
 
-def afficher_jouer():
-    st.title("Jouer")
-    st.write("C'est votre tour de jouer.")
+    new_message_packet = {
+        "nickname": nickname,
+        "text": new_message_text,
+    }
+
+    with server_state_lock[room_key]:
+        server_state[room_key] = server_state[room_key] + [new_message_packet]
 
 
-    if st.button("Terminer le tour"):
-        st.session_state["page"] = "accueil"
+st.text_input("Message", key=message_input_key, on_change=on_message_input)
 
-
-
-def main():
-    st.set_page_config(page_title="Jeu de Bataille Navale", layout="wide")
-    st.sidebar.title("Navigation")
-    page = st.sidebar.selectbox("Choisissez une page", ["Accueil", "Placement des bateaux", "Jouer"])
-    if page == "Accueil":
-        afficher_accueil()
-    elif page == "Placement des bateaux":
-        afficher_placement()
-    elif page == "Jouer":
-        afficher_jouer()
-
-if __name__ == "__main__":
-    main()
+st.subheader("Messages:")
+st.write(server_state[room_key])
