@@ -3,9 +3,17 @@ FROM python:3
 WORKDIR /usr/src/app
 
 COPY requirements.txt ./
+
 RUN pip install --no-cache-dir -r requirements.txt
-EXPOSE 8051
+
+EXPOSE 8501
 
 COPY game/* ./
+
+RUN mkdir -p /root/.streamlit
+RUN bash -c 'echo -e "\
+[general]\n\
+email = \"\"\n\
+" > /root/.streamlit/credentials.toml'
 
 CMD [ "streamlit", "run", "./main.py" ]
