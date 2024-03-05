@@ -16,7 +16,7 @@ slt.set_page_config(
 )
 
 BOARD_SIZE = 10
-test= []
+
 _SHIP = 1
 _WATER = 0
 _HIT = -1
