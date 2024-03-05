@@ -30,24 +30,23 @@ def add_nickname(nickname):
     finally:
         release_lock()
 
-# ...
-
-with st.sidebar.form("Pseudo"):
-    pseudo_saisie = st.text_input("Entrez votre pseudo", key='new_pseudo')
-    if st.form_submit_button("Valider"):
-        on_name()
-
-def on_name():
-    nouveau_pseudo = st.session_state.new_pseudo.strip()
+def on_name(nouveau_pseudo):
+    """Gère la soumission du formulaire pour ajouter un pseudo."""
     if nouveau_pseudo:
         acquire_lock()
         try:
             add_nickname(nouveau_pseudo)
-            st.session_state.new_pseudo = ""
             st.success("Pseudo enregistré !")
         finally:
             release_lock()
     else:
         st.warning("Veuillez entrer un pseudo valide.")
 
+# Utilisation de la barre latérale pour la saisie de pseudo
+with st.sidebar.form("Pseudo"):
+    nouveau_pseudo = st.text_input("Entrez votre pseudo", key='new_pseudo').strip()
+    if st.form_submit_button("Valider"):
+        on_name(nouveau_pseudo)
+
+# Affichage de la liste des pseudos connectés
 st.sidebar.write("Personnes connectées :", get_nicknames())
