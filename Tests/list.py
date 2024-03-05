@@ -90,9 +90,9 @@ def main():
             pseudos_placeholder = st.empty()
             pseudos = get_pseudos_list()
             pseudos_placeholder.write("Liste des pseudos avec leurs adresses IP:")
-            for ip, pseudo in pseudos:
-                pseudos_placeholder.write(f"{pseudo} (IP: {ip})")
-
+            #for ip, pseudo in pseudos:
+                #pseudos_placeholder.write(f"{pseudo} (IP: {ip})")
+    st.button("Mettre à jour la liste")
 
     pseudos = get_pseudos_list()
 
