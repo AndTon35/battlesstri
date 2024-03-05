@@ -18,7 +18,6 @@ rooms = server_state["rooms"]
 nicknames = server_state["nicknames"]
 
 room = st.sidebar.radio("Select room", rooms)
-nicknames = st.sidebar("Personnes connectées", nicknames)
 
 with st.sidebar.form("New room"):
 
@@ -30,6 +29,7 @@ with st.sidebar.form("New room"):
     st.text_input("Room name", key="new_room_name")
     st.form_submit_button("Create a new room", on_click=on_create)
 
+nicknames = st.sidebar.write("Personnes connectées :", nicknames)
 
 
 if not room:
