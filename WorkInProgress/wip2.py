@@ -29,8 +29,21 @@ with st.sidebar.form("New room"):
     st.text_input("Room name", key="new_room_name")
     st.form_submit_button("Create a new room", on_click=on_create)
 
-nicknames = st.sidebar.write("Personnes connectées :", nicknames)
-
+with st.sidebar.form("Pseudo"):
+    
+    def on_name():
+        new_pseudo = st.session_state.new_pseudo
+        with server_state_lock["nicknames"]:
+            server_state["nickames"] = server_state["nicknames"] + [new_pseudo]
+            
+    st.text_input("Pseudo", key='new_pseudo')
+    st.form_submit_button("Entrez votre pseudo", on_click=on_name)
+    #nickname = st.text_input("Votre pseudo", key=f"nickname_{room}")
+    #if not nickname:
+    #    st.warning("Entrez votre pseudo.")
+    #    st.stop()
+st.sidebar.write("Personnes connectées :", nicknames)
+print(nicknames)
 
 if not room:
     st.stop()
@@ -42,10 +55,6 @@ with server_state_lock[room_key]:
 
 st.header('Salle de jeu : '+ room, divider='rainbow')
 
-nickname = st.text_input("Votre pseudo", key=f"nickname_{room}")
-if not nickname:
-    st.warning("Entrez votre pseudo.")
-    st.stop()
 
 
 col1, col2 = st.columns([2,1])
@@ -64,7 +73,7 @@ with col2:
         new_message_text = st.session_state[message_input_key]
         if not new_message_text:
             return
-    
+
         new_message_packet = {
             "nickname": nickname,
             "text": new_message_text,
