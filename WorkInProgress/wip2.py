@@ -23,8 +23,11 @@ with st.sidebar.form("New room"):
 
     def on_create():
         new_room_name = st.session_state.new_room_name
-        with server_state_lock["rooms"]:
-            server_state["rooms"] = server_state["rooms"] + [new_room_name]
+        if new_room_name in rooms:
+            st.error("Salle déjà existante")
+        else:
+            with server_state_lock["rooms"]:
+                server_state["rooms"] = server_state["rooms"] + [new_room_name]
 
     st.text_input("Room name", key="new_room_name")
     st.form_submit_button("Create a new room", on_click=on_create)
@@ -33,8 +36,11 @@ with st.sidebar.form("Pseudo"):
     
     def on_name():
         new_pseudo = st.session_state.new_pseudo
-        with server_state_lock["nicknames"]:
-            server_state["nickames"] = server_state["nicknames"] + [new_pseudo]
+        if new_pseudo in nicknames:
+            st.error("Pseudo déjà utilisé")
+        else:
+            with server_state_lock["nicknames"]:
+                server_state["nickames"] = server_state["nicknames"] + [new_pseudo]
             
     st.text_input("Pseudo", key='new_pseudo')
     st.form_submit_button("Entrez votre pseudo", on_click=on_name)
