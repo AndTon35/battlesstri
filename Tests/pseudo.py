@@ -2,12 +2,45 @@ import streamlit as st
 from threading import RLock
 from streamlit.runtime.scriptrunner import get_script_run_ctx
 from streamlit import runtime
+import json
 
 # Initialisation de l'état côté client
 if "nicknames" not in st.session_state:
     st.session_state["nicknames"] = {}
 if "lock" not in st.session_state:
     st.session_state["lock"] = None
+
+def add_pseudo_to_list(pseudo):
+    # Chemin vers le fichier de stockage
+    file_path = "pseudos.json"
+    
+    # Charger la liste des pseudos depuis le fichier
+    try:
+        with open(file_path, 'r') as file:
+            pseudos = json.load(file)
+    except FileNotFoundError:
+        pseudos = []
+    
+    # Ajouter le nouveau pseudo à la liste
+    pseudos.append(pseudo)
+    
+    # Sauvegarder la liste mise à jour dans le fichier
+    with open(file_path, 'w') as file:
+        json.dump(pseudos, file)
+
+def get_pseudos_list():
+    # Chemin vers le fichier de stockage
+    file_path = "pseudos.json"
+    
+    # Charger la liste des pseudos depuis le fichier
+    try:
+        with open(file_path, 'r') as file:
+            pseudos = json.load(file)
+    except FileNotFoundError:
+        pseudos = []
+    
+    return pseudos
+
 
 def get_remote_ip() -> str:
     """Get remote ip."""
