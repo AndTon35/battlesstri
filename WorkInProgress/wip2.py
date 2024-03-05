@@ -10,9 +10,15 @@ with server_state_lock["rooms"]:
     if "rooms" not in server_state:
         server_state["rooms"] = []
 
+with server_state_lock["nicknames"]:
+    if "nicknames" not in server_state:
+        server_state["nicknames"] = []
+
 rooms = server_state["rooms"]
+nicknames = server_state["nicknames"]
 
 room = st.sidebar.radio("Select room", rooms)
+nicknames = st.sidebar("Personnes connectées", nicknames)
 
 with st.sidebar.form("New room"):
 
@@ -41,31 +47,31 @@ if not nickname:
     st.warning("Entrez votre pseudo.")
     st.stop()
 
-#message_input_key = f"message_input_{room}"
 
-
-#def on_message_input():
-#    new_message_text = st.session_state[message_input_key]
-#    if not new_message_text:
-#        return
-#
-#    new_message_packet = {
-#        "nickname": nickname,
-#        "text": new_message_text,
-#    }
-#
-#    with server_state_lock[room_key]:
-#        server_state[room_key] = server_state[room_key] + [new_message_packet]
-
-
-#st.text_input("Message", key=message_input_key, on_change=on_message_input)
-
-#st.subheader("Messages:")
-#st.write(server_state[room_key])
-
-cols = st.columns(2)
-with cols[0]:
+col1, col2 = st.columns([2,1])
+with col1:
     st.header("Jeu")
+    grille = st.columns(10)
+    for i in range(10):
+        with grille[i]:
+            panel = st.container(border=True)
+            st.header(str(i))
     
-with cols[1]:
+with col2:
     st.header("Chat")
+    message_input_key = f"message_input_{room}"
+    def on_message_input():
+        new_message_text = st.session_state[message_input_key]
+        if not new_message_text:
+            return
+    
+        new_message_packet = {
+            "nickname": nickname,
+            "text": new_message_text,
+        }
+    
+        with server_state_lock[room_key]:
+            server_state[room_key] = server_state[room_key] + [new_message_packet]
+    st.text_input("Message", key=message_input_key, on_change=on_message_input)
+    st.subheader("Messages:")
+    st.write(server_state[room_key])
