@@ -3,6 +3,7 @@ import json
 from streamlit_server_state import server_state, server_state_lock
 from streamlit import runtime
 from streamlit.runtime.scriptrunner import get_script_run_ctx
+import pandas as pd
 
 st.set_page_config(layout="wide")
 pseudos = {}
@@ -202,12 +203,31 @@ def main():
 
     col1, col2 = st.columns([2, 1])
     with col1:
-        st.header("Jeu")
-        grille = st.columns(10)
+        data = {}
         for i in range(10):
-            with grille[i]:
-                panel = st.container(border=True)
-                st.header(str(i))
+            col = f'col{i}'
+            data[col]= range(10)
+        df = pd.DataFrame(data)
+
+        columns = st.multiselect("Columns:",df.columns, key='column_selector__columns')
+        filter = st.radio("Choose by:", ("exclusion","inclusion"), key='column_selector__filter')
+
+        if filter == "exclusion":
+            columns = [col for col in df.columns if col not in columns]
+
+        df[columns]
+    
+    #with col1:
+    #    options = ['Eau', 'Bateau1', 'Bateau2']
+    #    num_row = 10
+    #    st.header("Jeu")
+    #    grille = st.columns(10)
+    #    for i in range(10):
+    #        with grille[i]:
+    #            #panel = st.container(border=True)
+    #            st.header(str(i))
+    #            for i in range(num_row):
+    #                st.text_input('col'+str(grille[i]), key = f'input')
 
     with col2:
         st.header("Chat")
