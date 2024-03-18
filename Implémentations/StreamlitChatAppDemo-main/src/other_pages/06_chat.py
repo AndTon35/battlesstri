@@ -24,6 +24,8 @@ with st.sidebar:
             new_room_name = st.session_state.new_room_name
             if new_room_name in rooms:
                 st.error("Salle de jeu déjà existante")
+            elif new_room_name == "" or new_room_name == " ":
+                st.error("Nom de la salle invalide")
             else:
                 with server_state_lock["rooms"]:
                     server_state["rooms"] = server_state["rooms"] + [new_room_name]
@@ -64,13 +66,11 @@ with col2:
         and st.session_state[const.SESSION_INFO_AUTH_STATUS]
     ):
         messages = []
-        # Check if chatbot is enabled
-        tmp_use_chatbot = db.get_openai_settings_use_character()
 
         user_infos = {}
         username = st.session_state[const.SESSION_INFO_USERNAME]
         name = st.session_state[const.SESSION_INFO_NAME]
-        user_msg = st.chat_input("Enter your message")
+        user_msg = st.chat_input("Entrez votre message")
 
         # Show old chat messages
         chat_log = db.get_chat_log(chat_id=CHAT_ID, limit=const.MAX_CHAT_LOGS)
@@ -142,26 +142,6 @@ with col2:
             with st.chat_message(name, avatar=user_infos[username]["image"]):
                 st.write(name + "> " + user_msg)
 
-            #if persona is not None:
-            #    # Show chatbot message
-            #    messages.append({"role": "user", "content": name + " said " + user_msg})
-            #    messages.append({"role": "assistant", "content": name + " said "})
-            #    #completion = openai.ChatCompletion.create(
-            #    #    model=const.MODEL_NAME,
-            #    #    messages=messages,
-            #    #)
-            #    #assistant_msg = completion["choices"][0]["message"]["content"]
-            #    with st.chat_message(const.CHATBOT_NAME, avatar=const.CHATBOT_NAME):
-            #        st.write(const.CHATBOT_NAME + "> " + assistant_msg)
-            #    db.insert_chat_log(
-            #        chat_id=CHAT_ID,
-            #        username=const.CHATBOT_USERNAME,
-            #        name=const.CHATBOT_NAME,
-            #        message=assistant_msg,
-            #        sent_time=datetime.datetime.now(),
-            #    )
-
-        # Refresh the page every (REFRESH_INTERVAL) seconds
         count = st_autorefresh(
             interval=const.REFRESH_INTERVAL, limit=None, key="fizzbuzzcounter"
         )
