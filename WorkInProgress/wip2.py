@@ -21,7 +21,6 @@ nicknames = server_state["nicknames"]
 
 room = st.sidebar.radio("Select room", rooms)
 
-
 # Recupere l'ip du client
 def get_remote_ip() -> str:
     """Retourne l'adresse IP à distance du client."""
