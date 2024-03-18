@@ -12,6 +12,7 @@ from modules.authenticator import common_auth
 from modules.database import database
 import pandas as pd
 from streamlit_server_state import server_state, server_state_lock
+import string
 
 CHAT_ID = "0"
 st.set_page_config(layout="wide")
@@ -42,18 +43,19 @@ with server_state_lock[room_key]:
 st.header("Salle de jeu : " + room, divider="rainbow")
 col1, col2 = st.columns([2, 1])
 
+cols = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"]
 with col1:
     data = {}
     for i in range(10):
-        col = f'col{i}'
+        col = cols[i]
         data[col]= range(10)
     df = pd.DataFrame(data)
 
     columns = st.multiselect("Columns:",df.columns, key='column_selector__columns')
-    filter = st.radio("Choose by:", ("exclusion","inclusion"), key='column_selector__filter')
+    #filter = st.radio("Choose by:", ("exclusion","inclusion"), key='column_selector__filter')
 
-    if filter == "exclusion":
-        columns = [col for col in df.columns if col not in columns]
+    #if filter == "exclusion":
+    columns = [col for col in df.columns if col not in columns]
 
     df[columns]
 

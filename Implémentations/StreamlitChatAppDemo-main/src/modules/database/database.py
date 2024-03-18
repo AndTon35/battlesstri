@@ -144,54 +144,6 @@ class Database:
                 )
             conn.commit()
 
-    def get_openai_settings_use_character(self):
-        """Get openai settings use character from database.
-
-        Returns:
-            (current_use_chatbot) bool : True if use character, False otherwise.
-        """
-        # Get openai settings use character from database
-        current_use_chatbot = None
-        with sqlite3.connect(self.db_path) as conn:
-            with AutoCloseCursur(conn) as cur:
-                cur.execute("SELECT use_character FROM openai_settings;")
-                ret_row = cur.fetchone()
-                current_use_chatbot = ret_row[0]
-        return current_use_chatbot
-
-    def update_openai_settings_use_character(self, use_character: bool):
-        """Update openai settings use character in database.
-
-        Args:
-            use_character (bool): True if use character, False otherwise.
-        """
-        with sqlite3.connect(self.db_path) as conn:
-            with AutoCloseCursur(conn) as cur:
-                cur.execute(
-                    "UPDATE openai_settings SET use_character = ?;",
-                    (use_character,),
-                )
-            conn.commit()
-
-    def get_character_persona(self):
-        # Get character persona from database
-        ret_row = None
-        with sqlite3.connect(self.db_path) as conn:
-            with AutoCloseCursur(conn) as cur:
-                cur.execute("SELECT persona FROM character;")
-                ret_row = cur.fetchone()
-        return ret_row
-
-    def update_character_persona(self, persona: str):
-        # Update character persona in database
-        with sqlite3.connect(self.db_path) as conn:
-            with AutoCloseCursur(conn) as cur:
-                cur.execute(
-                    "UPDATE character SET persona = ?;",
-                    (persona,),
-                )
-            conn.commit()
-
     def delete_all_chat_logs(self):
         # Delete all chat logs from database
         with sqlite3.connect(self.db_path) as conn:
