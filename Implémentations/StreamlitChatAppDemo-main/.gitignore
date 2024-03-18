@@ -1,0 +1,6 @@
+resource/user_images/*
+database.db
+.vscode
+memo.txt
+.DS_Store
+__pycache__
