@@ -3,29 +3,33 @@ from st_pages import Page, show_pages, add_page_title, hide_pages
 import const
 from modules import common
 from modules.database import database
+from streamlit_server_state import server_state, server_state_lock
 
 db = database.Database()
+
+with server_state_lock["rooms"]:
+    if "rooms" not in server_state:
+        server_state["rooms"] = []
+
+
+
+
 
 def set_pages():
     """Set the pages to be shown in the sidebar.
     """
     default_pages = [
         Page("01_login.py", "Login/Logout", "🏠"),
-        Page("other_pages/02_register_user.py", "Register user", "📝"),
+        Page("other_pages/02_register_user.py", "Enregistrement de votre profil", "📝"),
     ]
     after_login_pages = [
-        Page("other_pages/03_reset_password.py", "Reset password", "🔑"),
-        Page("other_pages/04_change_icon.py", "Change icon", "👤"),
-        Page("other_pages/06_chat.py", "Chat", "💬"),
-        Page("other_pages/07_settings.py", "Settings", "⚙️"),
+        Page("other_pages/03_reset_password.py", "Changez votre mot de passe", "🔑"),
+        Page("other_pages/04_change_icon.py", "Changez votre avatar", "👤"),
+        Page("other_pages/06_chat.py", "Salle de jeu", "💬"),
+        Page("other_pages/07_settings.py", "Paramètres", "⚙️"),
     ]
     pages = default_pages
     
-    # Check if chatbot is enabled
-    current_use_chatbot = db.get_openai_settings_use_character()
-    if current_use_chatbot == 1:
-        pages.append(Page("other_pages/05_set_character.py", "Set character", "🤖"))
-
     # Check if user is logged in
     if (
         common.check_if_exists_in_session(const.SESSION_INFO_AUTH_STATUS)

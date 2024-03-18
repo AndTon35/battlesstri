@@ -7,7 +7,7 @@ IMAGE_DIR_PATH = "../resource/user_images"
 # Cookie Settings
 COOKIE_NAME = "streamlit_chat"
 COOKIE_KEY = "streamlit_chat_signature_key"
-COOKIE_EXPIRY_DAYS = 30
+COOKIE_EXPIRY_DAYS = 1
 # Streamlit authenticator settings
 PREAUTHORIZED = False
 # Session Settings
@@ -38,7 +38,7 @@ ERR_MSG_UNEXPECTED = "An unexpected error has occurred."
 ERR_MSG_GET_USER_INFO = "Failed to get user information."
 ERR_MSG_GET_CHAT_LOGS = "Failed to get chat logs."
 # Chat settings
-MAX_CHAT_LOGS = 100
+MAX_CHAT_LOGS = 1000
 # Auto refresh settings[ms]
 REFRESH_INTERVAL = 2 * 1000
 # OpenAI settings

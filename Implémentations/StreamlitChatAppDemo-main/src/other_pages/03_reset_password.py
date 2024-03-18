@@ -21,10 +21,10 @@ if (
             username = st.session_state[const.SESSION_INFO_USERNAME]
             password = authenticator.credentials["usernames"][username]["password"]
             db.update_user_info_password(username, password)
-            st.success("Password modified successfully")
+            st.success("Mot de passe modifié avec succès !")
     except Exception as e:
         st.error(e)
 else:
     st.error(
-        "You are not logged in. Please login to reset your password. Please go to the login page."
+        "Vous n'êtes pas connecté. Connectez vous pour modifier votre mot de passe. Allez à la page de connexion."
     )

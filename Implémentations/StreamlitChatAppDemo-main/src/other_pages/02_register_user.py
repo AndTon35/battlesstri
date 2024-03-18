@@ -15,7 +15,6 @@ db = database.Database()
 try:
     if authenticator.register_user("Register user", preauthorization=False):
         # User registered successfully
-        # TODO Need to find a better way to get the username
         username = next(iter(reversed(authenticator.credentials["usernames"])))
         user_infos = authenticator.credentials["usernames"][username]
         db.insert_user_info(
@@ -24,6 +23,6 @@ try:
             user_infos["name"],
             user_infos["password"],
         )
-        st.success("User registered successfully. Please login to continue.")
+        st.success("Utilisateur enregistré avec succès. Connectez-vous pour continuer.")
 except Exception as e:
     st.error(e)
