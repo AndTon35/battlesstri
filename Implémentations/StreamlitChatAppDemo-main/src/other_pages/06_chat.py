@@ -14,7 +14,6 @@ import pandas as pd
 from streamlit_server_state import server_state, server_state_lock
 import string
 
-CHAT_ID = "0"
 st.set_page_config(layout="wide")
 
 rooms = server_state["rooms"]
@@ -33,6 +32,8 @@ with st.sidebar:
         st.text_input("Nom de la salle de jeu", key = "new_room_name")
         st.form_submit_button("Créer une nouvelle salle de jeu", on_click=on_create)
 
+if not room:
+    st.stop()
 
 #add_page_title()
 room_key = f"room_{room}"
@@ -42,6 +43,8 @@ with server_state_lock[room_key]:
 
 st.header("Salle de jeu : " + room, divider="rainbow")
 col1, col2 = st.columns([2, 1])
+
+CHAT_ID = room
 
 cols = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"]
 with col1:
