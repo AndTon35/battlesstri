@@ -45,38 +45,39 @@ st.header("Salle de jeu : " + room, divider="rainbow")
 col1, col2 = st.columns([2, 1])
 
 CHAT_ID = room
+db = database.Database()
+
+authenticator = common_auth.get_authenticator()
 
 cols = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"]
-with col1:
-    data = {}
-    for i in range(10):
-        col = cols[i]
-        data[col]= range(10)
-    df = pd.DataFrame(data)
+if (
+    common.check_if_exists_in_session(const.SESSION_INFO_AUTH_STATUS)
+    and
+    st.session_state[const.SESSION_INFO_AUTH_STATUS]
+):
+    with col1:
+        data = {}
+        for i in range(10):
+            col = cols[i]
+            data[col]= range(10)
+        df = pd.DataFrame(data)
 
-    columns = st.multiselect("Columns:",df.columns, key='column_selector__columns')
-    #filter = st.radio("Choose by:", ("exclusion","inclusion"), key='column_selector__filter')
+        columns = st.multiselect("Columns:",df.columns, key='column_selector__columns')
+        #filter = st.radio("Choose by:", ("exclusion","inclusion"), key='column_selector__filter')
 
-    #if filter == "exclusion":
-    columns = [col for col in df.columns if col not in columns]
+        #if filter == "exclusion":
+        columns = [col for col in df.columns if col not in columns]
 
-    df[columns]
+        df[columns]
 
-with col2:
-    st.header("Chat")
-    authenticator = common_auth.get_authenticator()
-    db = database.Database()
-    if (
-        common.check_if_exists_in_session(const.SESSION_INFO_AUTH_STATUS)
-        and st.session_state[const.SESSION_INFO_AUTH_STATUS]
-    ):
+    with col2:
+        st.header("Chat")
+        authenticator = common_auth.get_authenticator()
         messages = []
-
         user_infos = {}
         username = st.session_state[const.SESSION_INFO_USERNAME]
         name = st.session_state[const.SESSION_INFO_NAME]
         user_msg = st.chat_input("Entrez votre message")
-
         # Show old chat messages
         chat_log = db.get_chat_log(chat_id=CHAT_ID, limit=const.MAX_CHAT_LOGS)
         if chat_log is not None:
@@ -109,10 +110,8 @@ with col2:
                         log_name, avatar=user_infos[log_username]["image"]
                     ):
                         st.write(log_name + "> " + log_message)
-
         else:
             st.error(const.ERR_MSG_GET_CHAT_LOGS)
-
         # Show user message
         if user_msg:
             # Show new chat message
@@ -146,9 +145,8 @@ with col2:
                 )
             with st.chat_message(name, avatar=user_infos[username]["image"]):
                 st.write(name + "> " + user_msg)
-
         count = st_autorefresh(
             interval=const.REFRESH_INTERVAL, limit=None, key="fizzbuzzcounter"
         )
-    else:
-        st.error("You are not logged in. Please go to the login page.")
+else:
+    st.error("You are not logged in. Please go to the login page.")
