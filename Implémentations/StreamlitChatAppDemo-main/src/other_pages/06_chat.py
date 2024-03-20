@@ -79,28 +79,29 @@ with col1:
 #
     #df[columns]
 
-    container1 = st.container(border=True)
-    container1.write("TEST")
+    container1 = st.container()
+    #container1.write("TEST")
     with container1:
         subsubcol1, subsubcol2 = st.columns([2, 1])
-        
-        st.write("Grille de votre adversaire: ")
-        data1 = {
-            "A": [0,0,0,0,0,0,0,0,0],
-            "B": [0,0,0,0,0,0,0,0,0],
-            "C": [0,0,0,0,0,0,0,0,0],
-            "D": [0,0,0,0,0,0,0,0,0],
-            "E": [0,0,0,0,0,0,0,0,0],
-            "F": [0,0,0,0,0,0,0,0,0],
-            "G": [0,0,0,0,0,0,0,0,0],
-            "H": [0,0,0,0,0,0,0,0,0],
-            "I": [0,0,0,0,0,0,0,0,0],
-            "J": [0,0,0,0,0,0,0,0,0]
-            }
+        with subcol1:
+            st.write("Grille de votre adversaire: ")
+            data1 = {
+                "A": [0,0,0,0,0,0,0,0,0],
+                "B": [0,0,0,0,0,0,0,0,0],
+                "C": [0,0,0,0,0,0,0,0,0],
+                "D": [0,0,0,0,0,0,0,0,0],
+                "E": [0,0,0,0,0,0,0,0,0],
+                "F": [0,0,0,0,0,0,0,0,0],
+                "G": [0,0,0,0,0,0,0,0,0],
+                "H": [0,0,0,0,0,0,0,0,0],
+                "I": [0,0,0,0,0,0,0,0,0],
+                "J": [0,0,0,0,0,0,0,0,0]
+                }
 
-        df1 = pd.DataFrame(data1)
-        st.write(df1)
-        st.write("Bateaux")
+            df1 = pd.DataFrame(data1)
+            st.write(df1)
+        with subcol2:
+            st.write("Bateaux")
     st.write("Votre grille: ")
     data2 = {
         "A": [0,0,0,0,0,0,0,0,0],
