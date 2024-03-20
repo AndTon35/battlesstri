@@ -22,6 +22,7 @@ with st.sidebar:
     with st.form("Nouvelle salle de jeu"):
         def on_create():
             new_room_name = st.session_state.new_room_name
+            new_room_password = st.session_state.new_room_password
             if new_room_name in rooms:
                 st.error("Salle de jeu déjà existante")
             elif new_room_name == "" or new_room_name == " ":
@@ -30,6 +31,7 @@ with st.sidebar:
                 with server_state_lock["rooms"]:
                     server_state["rooms"] = server_state["rooms"] + [new_room_name]
         st.text_input("Nom de la salle de jeu", key = "new_room_name")
+        st.text_input("Mot de passe", type="password", key="new_room_password")
         st.form_submit_button("Créer une nouvelle salle de jeu", on_click=on_create)
 
 if not room:
@@ -40,6 +42,18 @@ room_key = f"room_{room}"
 with server_state_lock[room_key]:
     if room_key not in server_state:
         server_state[room_key] = []
+
+       
+#if room:
+#    entered_password = st.text_input("Entrez le mot de passe de la salle de jeu", type="password", key="entered_password")
+#    room_password = None
+#    for r in server_state['rooms']:
+#        room_password = r[1]
+#        break
+#    if room_password and entered_password == room_password:
+#        st.success("Accès à la salle autorisé")
+#    else:
+#        st.error("Accès à la salle refusé, mot de passe incorrect")
 
 st.header("Salle de jeu : " + room, divider="rainbow")
 col1, col2 = st.columns([2, 1])
