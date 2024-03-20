@@ -61,21 +61,66 @@ col1, col2 = st.columns([2, 1])
 CHAT_ID = room
 
 cols = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"]
+
+
 with col1:
-    data = {}
-    for i in range(10):
-        col = cols[i]
-        data[col]= range(10)
-    df = pd.DataFrame(data)
+    subcol1, subcol2 = st.columns([2, 1])
+    #data = {}
+    #for i in range(10):
+    #    col = cols[i]
+    #    data[col]= range(10)
+    #df = pd.DataFrame(data)
+#
+    #columns = st.multiselect("Columns:",df.columns, key='column_selector__columns')
+    ##filter = st.radio("Choose by:", ("exclusion","inclusion"), key='column_selector__filter')
+#
+    ##if filter == "exclusion":
+    #columns = [col for col in df.columns if col not in columns]
+#
+    #df[columns]
 
-    columns = st.multiselect("Columns:",df.columns, key='column_selector__columns')
-    #filter = st.radio("Choose by:", ("exclusion","inclusion"), key='column_selector__filter')
+    container1 = st.container(border=True)
+    container1.write("TEST")
+    with container1:
+        subsubcol1, subsubcol2 = st.columns([2, 1])
+        
+        st.write("Grille de votre adversaire: ")
+        data1 = {
+            "A": [0,0,0,0,0,0,0,0,0],
+            "B": [0,0,0,0,0,0,0,0,0],
+            "C": [0,0,0,0,0,0,0,0,0],
+            "D": [0,0,0,0,0,0,0,0,0],
+            "E": [0,0,0,0,0,0,0,0,0],
+            "F": [0,0,0,0,0,0,0,0,0],
+            "G": [0,0,0,0,0,0,0,0,0],
+            "H": [0,0,0,0,0,0,0,0,0],
+            "I": [0,0,0,0,0,0,0,0,0],
+            "J": [0,0,0,0,0,0,0,0,0]
+            }
 
-    #if filter == "exclusion":
-    columns = [col for col in df.columns if col not in columns]
-
-    df[columns]
-
+        df1 = pd.DataFrame(data1)
+        st.write(df1)
+        st.write("Bateaux")
+    st.write("Votre grille: ")
+    data2 = {
+        "A": [0,0,0,0,0,0,0,0,0],
+        "B": [0,0,0,0,0,0,0,0,0],
+        "C": [0,0,0,0,0,0,0,0,0],
+        "D": [0,0,0,0,0,0,0,0,0],
+        "E": [0,0,0,0,0,0,0,0,0],
+        "F": [0,0,0,0,0,0,0,0,0],
+        "G": [0,0,0,0,0,0,0,0,0],
+        "H": [0,0,0,0,0,0,0,0,0],
+        "I": [0,0,0,0,0,0,0,0,0],
+        "J": [0,0,0,0,0,0,0,0,0]
+    }
+    df2 = pd.DataFrame(data2)
+    st.write(df2)
+    
+    my_expander = st.expander(label='Expand me')
+    my_expander.write('TEST')
+    clicked = my_expander.button('CLIC')
+    
 with col2:
     st.header("Chat")
     authenticator = common_auth.get_authenticator()
