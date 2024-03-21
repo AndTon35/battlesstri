@@ -80,10 +80,11 @@ with col1:
     #df[columns]
 
     container1 = st.container()
+    container2 = st.container()
     #container1.write("TEST")
     with container1:
-        subsubcol1, subsubcol2 = st.columns([2, 1])
-        with subcol1:
+        subcol11, subcol12 = st.columns([2, 1])
+        with subcol11:
             st.write("Grille de votre adversaire: ")
             data1 = {
                 "A": [0,0,0,0,0,0,0,0,0],
@@ -100,27 +101,34 @@ with col1:
 
             df1 = pd.DataFrame(data1)
             st.write(df1)
-        with subcol2:
-            st.write("Bateaux")
-    st.write("Votre grille: ")
-    data2 = {
-        "A": [0,0,0,0,0,0,0,0,0],
-        "B": [0,0,0,0,0,0,0,0,0],
-        "C": [0,0,0,0,0,0,0,0,0],
-        "D": [0,0,0,0,0,0,0,0,0],
-        "E": [0,0,0,0,0,0,0,0,0],
-        "F": [0,0,0,0,0,0,0,0,0],
-        "G": [0,0,0,0,0,0,0,0,0],
-        "H": [0,0,0,0,0,0,0,0,0],
-        "I": [0,0,0,0,0,0,0,0,0],
-        "J": [0,0,0,0,0,0,0,0,0]
-    }
-    df2 = pd.DataFrame(data2)
-    st.write(df2)
+        with subcol12:
+            st.write("Bateaux restant de votre adversaire :")
+            st.image('../resource/images/maillebreze.png')
+    with container2:
+        subcol21, subcol22 = st.columns([2, 1])
+        with subcol21:
+            st.write("Votre grille: ")
+            data2 = {
+                "A": [0,0,0,0,0,0,0,0,0],
+                "B": [0,0,0,0,0,0,0,0,0],
+                "C": [0,0,0,0,0,0,0,0,0],
+                "D": [0,0,0,0,0,0,0,0,0],
+                "E": [0,0,0,0,0,0,0,0,0],
+                "F": [0,0,0,0,0,0,0,0,0],
+                "G": [0,0,0,0,0,0,0,0,0],
+                "H": [0,0,0,0,0,0,0,0,0],
+                "I": [0,0,0,0,0,0,0,0,0],
+                "J": [0,0,0,0,0,0,0,0,0]
+            }
+            df2 = pd.DataFrame(data2)
+            st.write(df2)
+        with subcol22:
+            st.write("Bateaux restant :")
+            st.image('../resource/images/maillebreze.png')
     
-    my_expander = st.expander(label='Expand me')
-    my_expander.write('TEST')
-    clicked = my_expander.button('CLIC')
+    #my_expander = st.expander(label='Expand me')
+    #my_expander.write('TEST')
+    #clicked = my_expander.button('CLIC')
     
 with col2:
     st.header("Chat")
