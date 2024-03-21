@@ -104,6 +104,12 @@ with col1:
         with subcol12:
             st.write("Bateaux restant de votre adversaire :")
             st.image('../resource/images/maillebreze.png')
+            st.image('../resource/images/amiralwilliams.png')
+            st.image('../resource/images/kusnetsov.png')
+            st.image('../resource/images/submarine.png')
+            
+            
+            
     with container2:
         subcol21, subcol22 = st.columns([2, 1])
         with subcol21:
@@ -125,6 +131,11 @@ with col1:
         with subcol22:
             st.write("Bateaux restant :")
             st.image('../resource/images/maillebreze.png')
+            st.image('../resource/images/amiralwilliams.png')
+            st.image('../resource/images/kusnetsov.png')
+            st.image('../resource/images/submarine.png')
+            
+            
     
     #my_expander = st.expander(label='Expand me')
     #my_expander.write('TEST')
