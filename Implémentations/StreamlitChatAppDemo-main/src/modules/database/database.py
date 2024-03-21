@@ -150,3 +150,13 @@ class Database:
             with AutoCloseCursur(conn) as cur:
                 cur.execute("DELETE FROM chat_logs;")
             conn.commit()
+            
+    def store_dataframe(self, table_name: str, column_name: str, csv_string: str):
+        with sqlite3.connect(self.db_path) as conn:
+            with AutoCloseCursur(conn) as cur:
+                # Assuming the table and column already exist
+                cur.execute(
+                    f"UPDATE {table_name} SET {column_name} = ? WHERE some_condition;",
+                    (csv_string,),
+                )
+            conn.commit()
