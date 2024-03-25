@@ -246,8 +246,8 @@ with col2:
             with st.chat_message(name, avatar=user_infos[username]["image"]):
                 st.write(name + "> " + user_msg)
 
-        count = st_autorefresh(
-            interval=const.REFRESH_INTERVAL, limit=None, key="fizzbuzzcounter"
-        )
+        #count = st_autorefresh(
+        #    interval=const.REFRESH_INTERVAL, limit=None, key="fizzbuzzcounter"
+        #)
     else:
         st.error("You are not logged in. Please go to the login page.")
