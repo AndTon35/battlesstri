@@ -13,6 +13,7 @@ from modules.database import database
 import pandas as pd
 from streamlit_server_state import server_state, server_state_lock
 import string
+import random
 
 st.set_page_config(layout="wide")
 
@@ -26,45 +27,68 @@ button[title="View fullscreen"]{
 
 st.markdown(hide_img_fs, unsafe_allow_html=True)
 
-rooms = server_state["rooms"]
-if "passwords" not in server_state:
-    server_state["passwords"] = []
-passwords = server_state["passwords"]
-if "is_authorized" not in st.session_state:
-    st.session_state["is_authorized"] = False
-with st.sidebar:  
-    room = st.radio("Select room", rooms)
-    with st.form("Nouvelle salle de jeu"):
-        def on_create():
-            new_room_name = st.session_state.new_room_name
-            new_room_password = st.session_state.new_room_password
-            if new_room_name in rooms:
-                st.error("Salle de jeu déjà existante")
-            elif new_room_name == "" or new_room_name == " ":
-                st.error("Nom de la salle invalide")
-            else:
-                with server_state_lock["rooms"]:
-                    server_state["rooms"] = server_state["rooms"] + [new_room_name]
-                    server_state["passwords"] = server_state["passwords"] + [new_room_password]
-        st.text_input("Nom de la salle de jeu", key = "new_room_name")
-        st.text_input("Mot de passe", type="password", key="new_room_password")
-        st.form_submit_button("Créer une nouvelle salle de jeu", on_click=on_create)
-
-if not room:
-    st.stop()
 
 #add_page_title()
-room_key = f"room_{room}"
-with server_state_lock[room_key]:
-    if room_key not in server_state:
-        server_state[room_key] = []
 
-st.header("Salle de jeu : " + room, divider="rainbow")
+
+st.header("Salle de jeu : ", divider="rainbow")
 col1, col2 = st.columns([2, 1])
 
-CHAT_ID = room
+CHAT_ID = 0
 
+BOARD_SIZE = 10
 cols = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"]
+SHIP_SIZES = {'Carrier': 5, 'Battleship': 4, 'Destroyer': 3, 'Submarine': 2}
+
+def create_board():
+    # Create a DataFrame with columns labeled from A to J
+    columns = [chr(65 + i) for i in range(BOARD_SIZE)]
+    return pd.DataFrame([['.' for _ in range(BOARD_SIZE)] for _ in range(BOARD_SIZE)], columns=columns)
+
+def place_ship(board, row, col, length, direction, ship_name):
+    if direction == "left":
+        if col - length < 0:
+            return False
+        for i in range(length):
+            if board.iloc[row, col - i] != '.':
+                return False
+        for i in range(length):
+            board.iloc[row, col - i] = ship_name[0]
+    elif direction == "right":
+        if col + length >= BOARD_SIZE:
+            return False
+        for i in range(length):
+            if board.iloc[row, col + i] != '.':
+                return False
+        for i in range(length):
+            board.iloc[row, col + i] = ship_name[0]
+    elif direction == "up":
+        if row - length < 0:
+            return False
+        for i in range(length):
+            if board.iloc[row - i, col] != '.':
+                return False
+        for i in range(length):
+            board.iloc[row - i, col] = ship_name[0]
+    elif direction == "down":
+        if row + length >= BOARD_SIZE:
+            return False
+        for i in range(length):
+            if board.iloc[row + i, col] != '.':
+                return False
+        for i in range(length):
+            board.iloc[row + i, col] = ship_name[0]
+    return True
+
+def place_ships(board):
+    for ship_name, ship_size in SHIP_SIZES.items():
+        while True:
+            row = random.randint(0, BOARD_SIZE - 1)
+            col = random.randint(0, BOARD_SIZE - 1)
+            direction = random.choice(["left", "right", "up", "down"])
+            if place_ship(board, row, col, ship_size, direction, ship_name):
+                break
+
 
 
 with col1:
@@ -104,8 +128,10 @@ with col1:
                 }
 
             df1 = pd.DataFrame(data1)
-            st.write(df1)
-            csv_string1 = df1.to_csv(index=False, sep=',')
+            #st.write(df1)
+            #csv_string1 = df1.to_csv(index=False, sep=',')
+            board1 = create_board()
+            st.dataframe(board1)
         with subcol12:
             st.write("Bateaux restant de votre adversaire :")
             st.image('../resource/images/maillebreze.png')
@@ -119,20 +145,9 @@ with col1:
         subcol21, subcol22 = st.columns([2, 1])
         with subcol21:
             st.write("Votre grille: ")
-            data2 = {
-                "A": [0,0,0,0,0,0,0,0,0,0],
-                "B": [0,0,0,0,0,0,0,0,0,0],
-                "C": [0,0,0,0,0,0,0,0,0,0],
-                "D": [0,0,0,0,0,0,0,0,0,0],
-                "E": [0,0,0,0,0,0,0,0,0,0],
-                "F": [0,0,0,0,0,0,0,0,0,0],
-                "G": [0,0,0,0,0,0,0,0,0,0],
-                "H": [0,0,0,0,0,0,0,0,0,0],
-                "I": [0,0,0,0,0,0,0,0,0,0],
-                "J": [0,0,0,0,0,0,0,0,0,0]
-            }
-            df2 = pd.DataFrame(data2)
-            st.write(df2)
+            board2 = create_board()
+            place_ships(board2)
+            st.dataframe(board2)
         with subcol22:
             st.write("Bateaux restant :")
             st.image('../resource/images/maillebreze.png')
