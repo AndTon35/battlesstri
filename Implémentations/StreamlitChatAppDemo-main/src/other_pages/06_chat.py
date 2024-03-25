@@ -50,21 +50,6 @@ with st.sidebar:
         st.text_input("Mot de passe", type="password", key="new_room_password")
         st.form_submit_button("Créer une nouvelle salle de jeu", on_click=on_create)
 
-with st.form("form_password"):
-    entered_password = st.text_input("Entrez le mot de passe de la salle de jeu", type="password", key="entered_password")
-    submit_button = st.form_submit_button("Entrer")
-
-if submit_button:
-    if st.session_state["passwords"][room] == entered_password:
-        st.session_state["is_authorized"] = True
-        st.success("Accès à la salle autorisé")
-    else:
-        st.error("Accès à la salle refusé, mot de passe incorrect")
-
-# Bloquer l'accès à la salle de jeu si l'utilisateur n'est pas autorisé
-if not st.session_state["is_authorized"]:
-    st.stop()
-
 if not room:
     st.stop()
 
@@ -73,18 +58,6 @@ room_key = f"room_{room}"
 with server_state_lock[room_key]:
     if room_key not in server_state:
         server_state[room_key] = []
-
-       
-#if room:
-#    entered_password = st.text_input("Entrez le mot de passe de la salle de jeu", type="password", key="entered_password")
-#    room_password = None
-#    for r in server_state['rooms']:
-#        room_password = r[1]
-#        break
-#    if room_password and entered_password == room_password:
-#        st.success("Accès à la salle autorisé")
-#    else:
-#        st.error("Accès à la salle refusé, mot de passe incorrect")
 
 st.header("Salle de jeu : " + room, divider="rainbow")
 col1, col2 = st.columns([2, 1])
