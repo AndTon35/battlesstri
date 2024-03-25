@@ -24,22 +24,14 @@ button[title="View fullscreen"]{
 </style>
 '''
 
-#st.markdown("""
-#    <style>
-#    /* Hide the link button */
-#    .stApp a:first-child {
-#        display: none;
-#    }
-#    
-#    .css-15zrgzn {display: none}
-#    .css-eczf16 {display: none}
-#    .css-jn99sy {display: none}
-#    </style>
-#    """, unsafe_allow_html=True)
-#
 st.markdown(hide_img_fs, unsafe_allow_html=True)
 
 rooms = server_state["rooms"]
+if "passwords" not in server_state:
+    server_state["passwords"] = []
+passwords = server_state["passwords"]
+if "is_authorized" not in st.session_state:
+    st.session_state["is_authorized"] = False
 with st.sidebar:  
     room = st.radio("Select room", rooms)
     with st.form("Nouvelle salle de jeu"):
@@ -53,9 +45,25 @@ with st.sidebar:
             else:
                 with server_state_lock["rooms"]:
                     server_state["rooms"] = server_state["rooms"] + [new_room_name]
+                    server_state["passwords"] = server_state["passwords"] + [new_room_password]
         st.text_input("Nom de la salle de jeu", key = "new_room_name")
         st.text_input("Mot de passe", type="password", key="new_room_password")
         st.form_submit_button("Créer une nouvelle salle de jeu", on_click=on_create)
+
+with st.form("form_password"):
+    entered_password = st.text_input("Entrez le mot de passe de la salle de jeu", type="password", key="entered_password")
+    submit_button = st.form_submit_button("Entrer")
+
+if submit_button:
+    if st.session_state["passwords"][room] == entered_password:
+        st.session_state["is_authorized"] = True
+        st.success("Accès à la salle autorisé")
+    else:
+        st.error("Accès à la salle refusé, mot de passe incorrect")
+
+# Bloquer l'accès à la salle de jeu si l'utilisateur n'est pas autorisé
+if not st.session_state["is_authorized"]:
+    st.stop()
 
 if not room:
     st.stop()
@@ -124,6 +132,7 @@ with col1:
 
             df1 = pd.DataFrame(data1)
             st.write(df1)
+            csv_string1 = df1.to_csv(index=False, sep=',')
         with subcol12:
             st.write("Bateaux restant de votre adversaire :")
             st.image('../resource/images/maillebreze.png')
