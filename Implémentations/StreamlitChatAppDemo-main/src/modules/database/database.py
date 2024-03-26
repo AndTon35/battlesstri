@@ -52,6 +52,9 @@ class Database:
                     WHERE NOT EXISTS (SELECT 1 FROM character)
                     """
                 )
+                cur.execute(
+                    "CREATE TABLE IF NOT EXISTS grilles(id INTEGER PRIMARY KEY, grille TEXT);"
+                )
             conn.commit()
 
     def insert_user_info(
@@ -160,3 +163,25 @@ class Database:
                     (csv_string,),
                 )
             conn.commit()
+            
+    def store_grid(self, grid_str: str):
+        try:
+            with sqlite3.connect(self.db_path) as conn:
+                with AutoCloseCursur(conn) as cur:
+                    cur.execute("INSERT INTO grilles (grille) VALUES (?);", (grid_str,))
+                conn.commit()
+        except sqlite3.Error as e:
+            print(f"Erreur lors de l'insertion des données : {e}")   
+            
+    def delete_all_grids(self):
+        """
+        Supprime toutes les grilles de la base de données.
+        """
+        try:
+            with sqlite3.connect(self.db_path) as conn:
+                with AutoCloseCursur(conn) as cur:
+                    cur.execute("DELETE FROM grilles;")
+                conn.commit()
+        except sqlite3.Error as e:
+            print(f"Erreur lors de la suppression des grilles : {e}") 
+        

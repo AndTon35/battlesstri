@@ -28,6 +28,7 @@ button[title="View fullscreen"]{
 st.markdown(hide_img_fs, unsafe_allow_html=True)
 
 
+
 #add_page_title()
 
 
@@ -89,7 +90,13 @@ def place_ships(board):
             if place_ship(board, row, col, ship_size, direction, ship_name):
                 break
 
+db = database.Database()
 
+with st.sidebar:
+    
+    if st.button("Nouvelle partie"):
+        db.delete_all_grids()
+    
 
 with col1:
     subcol1, subcol2 = st.columns([2, 1])
@@ -132,6 +139,8 @@ with col1:
             #csv_string1 = df1.to_csv(index=False, sep=',')
             board1 = create_board()
             st.dataframe(board1)
+            board1_str  = board1.to_string()
+            db.store_grid(board1_str)
         with subcol12:
             st.write("Bateaux restant de votre adversaire :")
             st.image('../resource/images/maillebreze.png')
@@ -148,6 +157,9 @@ with col1:
             board2 = create_board()
             place_ships(board2)
             st.dataframe(board2)
+            board2_str  = board2.to_string()
+            db.store_grid(board2_str)
+
         with subcol22:
             st.write("Bateaux restant :")
             st.image('../resource/images/maillebreze.png')
