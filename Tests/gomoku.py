@@ -1,11 +1,3 @@
-"""
-This is a simple gomoku game built with Streamlit
-
-by TeddyHuang-00 (huang_nan_2019@pku.edu.cn).
-
-Shared under MIT license
-"""
-
 import time
 from copy import deepcopy
 from uuid import uuid4
@@ -18,8 +10,8 @@ from streamlit_server_state import server_state, server_state_lock
 
 # Page configuration
 slt.set_page_config(
-    page_title="Gomoku Game",
-    page_icon="5️⃣",
+    page_title="Battlestri",
+    page_icon="",
     initial_sidebar_state="expanded",
     menu_items={
         "Report a bug": "https://github.com/TeddyHuang-00/streamlit-gomoku/issues/new/choose",
